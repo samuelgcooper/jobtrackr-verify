@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifying Email - JobTrackr</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1D4ED8;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1D4ED8;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            background: #1D4ED8;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        .button:hover {
+            background: #1e40af;
+        }
+        .error {
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 id="title">Opening JobTrackr...</h1>
+            <div class="spinner" id="spinner"></div>
+            <p id="message">Redirecting you to the app...</p>
+            <p style="margin-top: 30px; font-size: 14px; color: #888;">If the app doesn't open automatically:</p>
+            <a href="#" id="manualLink" class="button">Open JobTrackr</a>
+        </div>
+    </div>
+
+    <script>
+        // Get token from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        if (token) {
+            // Valid token - create deep link
+            const deepLink = `jobtrackr://verify-email?token=${token}`;
+            
+            // Try to open app immediately
+            window.location.href = deepLink;
+            
+            // Set manual button link
+            document.getElementById('manualLink').href = deepLink;
+            
+            // Update message after 2 seconds
+            setTimeout(() => {
+                document.getElementById('title').textContent = 'Tap the button to open JobTrackr';
+                document.getElementById('message').textContent = 'Click the button below to verify your email and continue in the app.';
+            }, 2000);
+        } else {
+            // No token - show error
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('title').textContent = 'Invalid Verification Link';
+            document.getElementById('title').className = 'error';
+            document.getElementById('message').textContent = 'This verification link is invalid or has expired. Please request a new verification email from the app.';
+            document.getElementById('manualLink').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
